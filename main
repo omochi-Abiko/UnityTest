@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Tsumu : MonoBehaviour
+{
+    public int TsumuCount;
+    public GameObject TsumuPos;
+    public GameObject TsumuObj;
+    // Start is called before the first frame update
+    void Start()
+    {
+        //ツム初期生成
+        for (TsumuCount = 0; TsumuCount < 30; ++TsumuCount)
+        {
+            TsumuPos.transform.position = new Vector3(Random.Range(-0.25f, 1.25f), Random.Range(6f, 8f), 0f);
+            Instantiate(TsumuObj, TsumuPos.transform.position, Quaternion.identity);
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        //クリックorタップされたら
+        if (Input.GetMouseButton(0))
+        {
+            // タップした場所からRayを作成
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            // Raycastを作成
+            RaycastHit2D hit2d = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction);
+
+            //Rayが何かに衝突したことを検知 & 衝突した対象が自分自身かを判別
+            if (hit2d && hit2d.transform.gameObject.tag == "Tsumu")
+            {
+
+                /* クリック座標（スクリーン座標系） */
+                Vector3 screenPos = Input.mousePosition;
+                screenPos.z = 1.0f;
+
+                /* クリック座標（ワールド座標系） */
+                Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+
+                hit2d.transform.localScale = new Vector3(0.8f,0.8f,0.8f);
+               // Destroy(hit2d.transform.gameObject);
+
+
+            }
+
+        }
+    }
+}
